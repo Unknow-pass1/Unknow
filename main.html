@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="th">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,10 +11,12 @@
             text-align: center;
             padding: 20px;
         }
+
         .container {
             max-width: 500px;
             margin: auto;
         }
+
         .hint-card {
             border: 1px solid #ccc;
             padding: 15px;
@@ -21,18 +24,25 @@
             border-radius: 8px;
             background: #f9f9f9;
         }
-        textarea, input[type="url"], input[type="datetime-local"], input[type="file"] {
+
+        textarea,
+        input[type="url"],
+        input[type="datetime-local"],
+        input[type="file"] {
             width: 100%;
             padding: 8px;
             margin: 5px 0;
         }
+
         img {
             max-width: 100%;
             margin-top: 10px;
         }
+
         .hidden {
             display: none;
         }
+
         .download-btn {
             background: #28a745;
             color: white;
@@ -48,7 +58,7 @@
             const file = event.target.files[0];
             if (file) {
                 const reader = new FileReader();
-                reader.onload = function(e) {
+                reader.onload = function (e) {
                     document.getElementById('preview' + index).src = e.target.result;
                     document.getElementById('preview' + index).classList.remove('hidden');
                     document.getElementById('downloadImg' + index).href = e.target.result;
@@ -68,13 +78,42 @@
             link.download = "hints.txt";
             link.click();
         }
-        function sendEmail() {
-            const message = document.getElementById("message").value;
-            const mailtoLink = `mailto:nattawat.ppk17@gmail.com?subject=ข้อความจากน้องรหัส&body=${encodeURIComponent(message)}`;
-            window.location.href = mailtoLink;
+
+
+        let messages = [];
+
+        function saveMessage() {
+            const inputMessage = document.getElementById("messageInput").value;
+            if (inputMessage.trim() === "") {
+                alert("กรุณากรอกข้อความก่อนส่ง!");
+                return;
+            }
+
+            const now = new Date();
+            const dateTime = now.toLocaleString("th-TH");
+            const fullMessage = `${dateTime} / ${inputMessage}`;
+
+            messages.push(fullMessage);
+            document.getElementById("messageInput").value = "";
+
+            updateMessageLog();
+        }
+
+        function updateMessageLog() {
+            const log = document.getElementById("messageLog");
+            log.innerHTML = messages.map(msg => `<p>${msg}</p>`).join("");
+        }
+
+        function downloadMessages() {
+            const blob = new Blob(messages.map(msg => msg + "\n"), { type: "text/plain" });
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = "messages.txt";
+            link.click();
         }
     </script>
 </head>
+
 <body>
     <h1>คำใบ้น้องรหัส</h1>
     <div class="container">
@@ -115,11 +154,17 @@
             <img id="preview4" class="hidden" alt="Preview">
             <a id="downloadImg4" class="hidden" download="hint4.jpg">ดาวน์โหลดรูป</a>
         </div>
-        <div class="container">
-            <textarea id="message" placeholder="พิมพ์ข้อความถึงพี่รหัส"></textarea>
-            <button class="send-btn" onclick="sendEmail()">ส่งข้อความ</button>
-        </div>
         <button class="download-btn" onclick="downloadHints()">ดาวน์โหลดคำใบ้</button>
     </div>
+
+
+    <h1>ส่งข้อความ</h1>
+    <div class="container">
+        <form action="save_message.php" method="POST">
+            <textarea name="message" placeholder="พิมพ์ข้อความถึงพี่/น้องรหัส" required></textarea>
+            <button type="submit">ส่งข้อความ</button>
+        </form>
+    </div>
 </body>
+
 </html>
