@@ -90,12 +90,17 @@
 
             const data = { message: message };
 
-            fetch("https://script.google.com/macros/s/AKfycbwjxbXaTIWYnP__VpfFC2fRy2k0THtDc_k0C-R_EJeR955RnRAxWX0MgCj3BQb49yYI4w/exec", { // แก้ URL ที่นี่
+            fetch("https://script.google.com/macros/s/AKfycbwjxbXaTIWYnP__VpfFC2fRy2k0THtDc_k0C-R_EJeR955RnRAxWX0MgCj3BQb49yYI4w/exec", { // ใส่ URL Web App ที่นี่
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(data),
             })
-                .then(response => response.text())
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.text();
+                })
                 .then(result => {
                     alert("ข้อความถูกบันทึกสำเร็จ!");
                     document.getElementById("messageInput").value = "";
@@ -105,6 +110,7 @@
                     alert("ไม่สามารถส่งข้อความได้ กรุณาลองอีกครั้ง");
                 });
         }
+
 
 
     </script>
