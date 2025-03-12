@@ -80,37 +80,32 @@
         }
 
 
-        let messages = [];
+        function sendMessage() {
+            const message = document.getElementById("messageInput").value;
 
-        function saveMessage() {
-            const inputMessage = document.getElementById("messageInput").value;
-            if (inputMessage.trim() === "") {
-                alert("กรุณากรอกข้อความก่อนส่ง!");
+            if (message.trim() === "") {
+                alert("กรุณากรอกข้อความ!");
                 return;
             }
 
-            const now = new Date();
-            const dateTime = now.toLocaleString("th-TH");
-            const fullMessage = `${dateTime} / ${inputMessage}`;
+            const data = { message: message };
 
-            messages.push(fullMessage);
-            document.getElementById("messageInput").value = "";
-
-            updateMessageLog();
+            fetch("https://script.google.com/macros/s/AKfycbxLa2GXeM1X4mkq9I13p0EYBmFTPSjxcxBnxriwyAygTBg5IwggK-F0hHUVkSY2AjRlMw/exec", { // ใส่ URL Web App ของคุณตรงนี้
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(data),
+            })
+            .then(response => response.text())
+            .then(result => {
+                alert("ข้อความถูกบันทึกสำเร็จ!");
+                document.getElementById("messageInput").value = "";
+            })
+            .catch(error => {
+                console.error("เกิดข้อผิดพลาด:", error);
+                alert("ไม่สามารถส่งข้อความได้ กรุณาลองอีกครั้ง");
+            });
         }
 
-        function updateMessageLog() {
-            const log = document.getElementById("messageLog");
-            log.innerHTML = messages.map(msg => `<p>${msg}</p>`).join("");
-        }
-
-        function downloadMessages() {
-            const blob = new Blob(messages.map(msg => msg + "\n"), { type: "text/plain" });
-            const link = document.createElement("a");
-            link.href = URL.createObjectURL(blob);
-            link.download = "messages.txt";
-            link.click();
-        }
     </script>
 </head>
 
@@ -157,14 +152,12 @@
         <button class="download-btn" onclick="downloadHints()">ดาวน์โหลดคำใบ้</button>
     </div>
 
-
-    <h1>ส่งข้อความ</h1>
+    <h1>ส่งข้อความหาพี่/น้องรหัส</h1>
     <div class="container">
-        <form action="save_message.php" method="POST">
-            <textarea name="message" placeholder="พิมพ์ข้อความถึงพี่/น้องรหัส" required></textarea>
-            <button type="submit">ส่งข้อความ</button>
-        </form>
+        <textarea id="messageInput" placeholder="พิมพ์ข้อความถึงพี่/น้องรหัส"></textarea>
+        <button onclick="sendMessage()">ส่งข้อความ</button>
     </div>
+
 </body>
 
 </html>
