@@ -68,6 +68,11 @@
             link.download = "hints.txt";
             link.click();
         }
+        function sendEmail() {
+            const message = document.getElementById("message").value;
+            const mailtoLink = `mailto:nattawat.ppk17@gmail.com?subject=ข้อความจากน้องรหัส&body=${encodeURIComponent(message)}`;
+            window.location.href = mailtoLink;
+        }
     </script>
 </head>
 <body>
@@ -109,6 +114,10 @@
             <input type="file" accept="image/*" onchange="previewImage(event, 4)">
             <img id="preview4" class="hidden" alt="Preview">
             <a id="downloadImg4" class="hidden" download="hint4.jpg">ดาวน์โหลดรูป</a>
+        </div>
+        <div class="container">
+            <textarea id="message" placeholder="พิมพ์ข้อความถึงพี่รหัส"></textarea>
+            <button class="send-btn" onclick="sendEmail()">ส่งข้อความ</button>
         </div>
         <button class="download-btn" onclick="downloadHints()">ดาวน์โหลดคำใบ้</button>
     </div>
