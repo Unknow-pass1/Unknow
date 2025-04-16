@@ -21,7 +21,7 @@ function startCountdown(targetDate) {
     const interval = setInterval(updateCountdown, 1000);
 }
 
-const targetDate = new Date(2025, 2, 31, 23, 59, 59).getTime(); // (2025-03-31)
+const targetDate = new Date(2025, 3, 18, 0, 0, 0).getTime(); // (2025-03-31)
 startCountdown(targetDate);
 
 function previewImage(event, id) {
